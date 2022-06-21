@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Prototype Edge Balls</title>
+    <link rel="stylesheet" type="text/css" href="../common/demo.css" />
+    <style type="text/css">
+      .overflowContainer {
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        position: relative;
+      }
+
+      .terminusContainer {
+        /* outline: 1px dashed orange; */
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 0%);
+      }
+
+      .terminusContainer .ball {
+        margin: 30px 6px 0;
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        vertical-align: top;
+        transform: translateY(-400%);
+        will-change: transform;
+        transition: transform 0.5s cubic-bezier(0.6, 1.4, 0.6, 1);
+      }
+
+      .ball1 {
+        background-color: #69cdff;
+        transition-delay: 0.1s;
+      }
+
+      .ball2 {
+        background-color: #ff4a4a;
+        transition-delay: 0s;
+      }
+
+      .ball3 {
+        background-color: #ffb80d;
+        transition-delay: 0.2s;
+      }
+
+      .terminusContainer.series .ball1 {
+        transition-delay: 0s;
+      }
+
+      .terminusContainer.series .ball2 {
+        transition-delay: 0.1s;
+      }
+
+      .terminusContainer.series .ball3 {
+        transition-delay: 0.2s;
+      }
+
+      .terminusContainer.animate .ball {
+        transform: translateY(0);
+      }
+    </style>
+    <script type="text/javascript" src="../common/util-classes.js"></script>
+    <script type="text/javascript" src="../common/util-events.js"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+
+      function toggleAnimating(newState) {
+        const container = getElem('terminusContainer');
+        container.toggleClass('animate');
+      }
+
+      function toggleSeries(ev) {
+        const demo = getElem('terminusContainer');
+        demo.toggleClass('series');
+        ev.srcElement.innerHTML =
+          (demo.hasClass('series') ? 'Organic' : 'Series') + ' Style';
+      }
+
+      onDomReady(function () {
+        let animationTimeout;
+
+        addEventTo('buttonStart', 'click', toggleAnimating);
+        addEventTo('buttonToggleFlat', 'click', toggleSeries);
+
+        // Turn off when done
+        onTransitionEnd('lastBall', (ev) => {
+          if (ev.srcElement.parentElement.hasClass('animate')) {
+            animationTimeout = setTimeout(toggleAnimating, 1500);
+          }
+        });
+      });
+
+      //]]>
+    </script>
+  </head>
+
+  <body class="enyo-unselectable">
+    <div id="info" class="infoFrame">
+      <div class="info">
+        <h1>Prototype Edge Balls</h1>
+        <div style="text-align: center">
+          <button id="buttonStart">Reach the edge</button>
+          <button id="buttonToggleFlat">Series Style</button>
+        </div>
+        <p>
+          Reaching the edge of a list needs some visual indication you've gotten
+          there. See ways to illustrate this.
+        </p>
+      </div>
+    </div>
+    <div class="demoFrame">
+      <div class="overflowContainer">
+        <div id="terminusContainer" class="terminusContainer">
+          <div class="ball ball1"></div>
+          <div class="ball ball2"></div>
+          <div id="lastBall" class="ball ball3"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

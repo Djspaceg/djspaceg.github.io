@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>3D Cards</title>
+    <link rel="stylesheet" type="text/css" href="../common/demo.css" />
+    <style type="text/css">
+      body {
+        overflow: scroll;
+      }
+
+      h3 {
+        font-size: 1em;
+        margin: 0;
+        background-color: white;
+        border-radius: 8px 8px 0 0;
+        border: 1px solid #e8e8e8;
+        border-bottom-style: dashed;
+      }
+
+      .deck {
+        --x-rotate-factor: 30deg;
+        --y-rotate-factor: 15deg;
+        --y-brightness-factor: 0.5;
+        --card-depth-factor: 2px;
+        display: flex;
+        /* align-items: stretch; */
+        /* justify-content: stretch; */
+        /* height: 100%; */
+        margin: 0 0 1em 0;
+        padding: 0;
+        /* perspective: 800px; */
+        /* transform-style: preserve-3d; */
+        /* overflow: visible; */
+        /* perspective-origin: center center; */
+        /* width: 100vw; */
+      }
+
+      .deck * {
+        transform-style: preserve-3d;
+      }
+
+      @keyframes fullspin {
+        from {
+          transform: rotateY(0deg);
+        }
+
+        to {
+          transform: rotateY(360deg);
+        }
+      }
+
+      @keyframes bringforward {
+        0%,
+        10% {
+          z-index: 0;
+        }
+
+        100% {
+          z-index: 1;
+        }
+      }
+
+      .deck > li {
+        padding: 1ex;
+        display: block;
+        perspective: 870px;
+        /* flex: 1 1 1%; */
+        flex-shrink: 1;
+        flex-grow: 1;
+        flex-basis: 100%;
+        min-width: 0;
+        animation: none 1s linear 1 alternate;
+        animation-fill-mode: both;
+        will-change: min-width;
+        transition: min-width 0.5s ease-out;
+        /* outline: 1px solid red; */
+      }
+
+      @keyframes slideout {
+        from {
+          transform: translateZ(-150px) rotateY(-180deg);
+        }
+
+        50% {
+          transform: translateZ(-150px) rotateY(-180deg) rotateZ(5deg)
+            translateY(10%) translateX(70%);
+        }
+
+        to {
+          transform: translateZ(0px) rotateY(0);
+        }
+      }
+
+      .deck > li .body {
+        /* transition: transform 1s ease-in-out; */
+        transform: scale(1) translateZ(-150px) rotateY(180deg);
+        will-change: transform;
+        position: relative;
+        height: 300px;
+        width: 200px;
+        animation: none 1s ease-in-out 1 alternate;
+        animation-fill-mode: both;
+      }
+
+      .deck > li:hover {
+        animation-name: bringforward;
+        min-width: 200px;
+        /* z-index: 1; */
+      }
+
+      .deck > li:hover .body {
+        /* transform: scale(1) translateZ(0px) rotateY(0); */
+        animation-name: slideout;
+      }
+
+      .deck .back,
+      .deck .card {
+        border: 12px solid white;
+        border-radius: 16px;
+        /* height: 300px; */
+        /* width: 200px; */
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .deck .back {
+        --z-offset: -2px;
+        background-color: rgb(33 150 243);
+        position: absolute;
+        /* height: 100%; */
+        /* width: 100%; */
+        transform: translateZ(var(--z-offset));
+        display: block;
+        will-change: transform;
+        /* box-sizing: border-box; */
+        filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.2))
+          drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.3)) brightness(1);
+        background-image: radial-gradient(
+            ellipse at 50% 20%,
+            rgb(255 255 255 / 50%),
+            transparent
+          ),
+          linear-gradient(15deg, rgb(0 0 0 / 40%), transparent),
+          repeating-linear-gradient(
+            45deg,
+            rgb(0 14 179 / 20%),
+            rgb(0 14 179 / 20%) 5%,
+            transparent 5%,
+            transparent 10%
+          );
+      }
+
+      .deck .card {
+        text-align: center;
+        /* margin: 0 20px; */
+        /* height: 300px; */
+        /* width: 200px; */
+        background-color: #eee;
+        position: relative;
+        /* line-height: 100%; */
+        font-size: 150px;
+        transform: translateZ(0);
+        will-change: transform, filter;
+        text-shadow: 1px 2px 1px rgb(0 0 0 / 31%);
+        perspective: 800px;
+        /* backface-visibility: hidden; */
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+      }
+
+      .deck .card[data-category='alt'] {
+        color: #cc4444;
+      }
+
+      .deck > li:not(:hover) .back,
+      .deck > li:not(:hover) .card {
+        transition: transform 300ms ease-out, filter 300ms ease-out;
+      }
+
+      .deck > li:hover .back,
+      .deck > li:hover .card {
+        filter: drop-shadow(
+            calc((var(--mouse-x) * -2 + 1) * var(--card-depth-factor))
+              calc((var(--mouse-y) * -2 + 1) * var(--card-depth-factor)) 0px
+              rgba(0, 0, 0, 0.2)
+          )
+          drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.3))
+          brightness(
+            calc((var(--mouse-y) * -2 + 1) * var(--y-brightness-factor) + 1)
+          );
+        transform: translateZ(var(--z-offset, 0))
+          rotateY(
+            calc(
+              (
+                var(--mouse-x) * var(--y-rotate-factor) -
+                  (var(--y-rotate-factor) / 2)
+              )
+            )
+          )
+          rotateX(
+            calc(
+              (
+                  (var(--mouse-y) * var(--x-rotate-factor)) -
+                    (var(--x-rotate-factor) / 2)
+                ) * -1
+            )
+          );
+      }
+
+      .deck .card .face {
+        width: 100%;
+        text-align: center;
+        line-height: calc(300px - 12px - 12px);
+      }
+
+      .deck .card .face::before,
+      .deck .card .face::after {
+        content: attr(data-abbrev) ' ' attr(data-suit);
+        position: absolute;
+        margin: 12px;
+        line-height: 1em;
+        width: 1em;
+        font-size: 30px;
+        white-space: normal;
+      }
+
+      .deck .card .face::before {
+        top: 0;
+        left: 0;
+      }
+
+      .deck .card .face::after {
+        bottom: 0;
+        right: 0;
+        transform: rotate(180deg);
+        text-shadow: -1px -2px 1px rgb(0 0 0 / 31%);
+      }
+
+      .deck .card:first-child {
+        margin-inline-start: 0;
+      }
+
+      .deck .card:last-child {
+        margin-inline-end: 0;
+      }
+    </style>
+    <script type="text/javascript" src="../common/util-classes.js"></script>
+    <script type="text/javascript" src="../common/util-events.js"></script>
+    <script type="text/javascript">
+      const suits = ['♥︎', '♠︎'];
+      const cardTypes = [
+        { value: 1, abbrev: 'A', title: 'Ace', face: 'suit' },
+        { value: 2 },
+        { value: 3 },
+        { value: 4 },
+        { value: 5 },
+        { value: 6 },
+        { value: 7 },
+        { value: 8 },
+        { value: 9 },
+        { value: 10 },
+        { value: 11, abbrev: 'J', title: 'Jack', face: '♝' },
+        { value: 12, abbrev: 'Q', title: 'Queen', face: '♛' },
+        { value: 13, abbrev: 'K', title: 'King', face: '♚' },
+        // {value: 11, abbrev: 'J', title: 'Jack', face: '⛭'},
+        // {value: 12, abbrev: 'Q', title: 'Queen', face: '⛮'},
+        // {value: 13, abbrev: 'K', title: 'King', face: '⛯'},
+        // {value: 14, abbrev: 'A', title: 'Ace', face: 'suit'},
+      ];
+
+      const clamp = (min, val, max) => Math.min(Math.max(min, val), max);
+
+      onDomReady(function () {
+        console.log('loaded and ready');
+        const cards = document.querySelectorAll('.deck');
+
+        cards.forEach((el, index) => {
+          const suit = suits[index % suits.length];
+
+          for (const cardData in cardTypes) {
+            if (cardTypes.hasOwnProperty(cardData)) {
+              const cardInfo = cardTypes[cardData];
+              const li = document.createElement('li');
+              const body = document.createElement('div');
+              const card = document.createElement('div');
+              const back = document.createElement('div');
+              const face = document.createElement('div');
+
+              body.classList.add('body');
+              card.classList.add('card');
+              back.classList.add('back');
+              face.classList.add('face');
+
+              card.dataset.category = index % 2 ? 'normal' : 'alt';
+
+              face.dataset.suit = suit;
+              face.dataset.abbrev = cardInfo.abbrev || cardInfo.value;
+              face.innerText =
+                cardInfo.face === 'suit'
+                  ? suit
+                  : cardInfo.face || cardInfo.value;
+
+              card.appendChild(face);
+              body.appendChild(back);
+              body.appendChild(card);
+              li.appendChild(body);
+              el.appendChild(li);
+
+              addEventTo(li, 'mousemove', (ev) => {
+                window.requestAnimationFrame((step) => {
+                  const coords = li.getClientRects()[0];
+                  const mx = clamp(
+                    0,
+                    (ev.clientX - coords.left) / coords.width,
+                    1
+                  );
+                  const my = clamp(
+                    0,
+                    (ev.clientY - coords.top) / coords.height,
+                    1
+                  );
+                  // console.log('track mouse:', y);
+                  li.style.setProperty('--mouse-x', mx);
+                  li.style.setProperty('--mouse-y', my);
+                });
+              });
+            }
+          }
+        });
+        // addEventTo('button-toggle-mono', 'click', ev => {
+        // 	getElem('text-jira').toggleClass('monospaced')
+        // 	getElem('text-md').toggleClass('monospaced')
+        // 	ev.target.innerHTML = (getElem('text-jira').hasClass('monospaced') ? 'Readable' : 'Monospaced') + ' Style';
+        // });
+
+        // addEventTo('button-convert-to-jira', 'click', convertToJira);
+        // addEventTo('button-convert-to-md', 'click', convertToMd);
+
+        // ['change', 'keydown', 'keyup', 'keypress'].forEach(eventName => {
+        // 	addEventTo('text-md', eventName, convertToJira);
+        // 	addEventTo('text-jira', eventName, convertToMd);
+        // });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="infoFrame">
+      <div class="info">
+        <h1>3D Cards</h1>
+        <p>Move the mouse over a card to pick it up.</p>
+        <div style="text-align: center">
+          <button id="button-toggle-mono" onclick="window.location.reload()">
+            Reload
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="demoFrame">
+      <ol class="deck"></ol>
+      <ol class="deck"></ol>
+    </div>
+  </body>
+</html>

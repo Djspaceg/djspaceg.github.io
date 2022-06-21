@@ -1,0 +1,161 @@
+/**
+ * General styling for all demos and PoC files
+ */
+
+@import 'main.css';
+
+.infoFrame {
+  padding: 0.75em 5%;
+  box-sizing: border-box;
+  max-height: 25%;
+  flex: 1 1 1%;
+}
+.infoFrame.contentHeight {
+  max-height: none;
+}
+
+.infoFrame .info {
+  border-radius: 9px;
+  padding: 0 0.5em;
+  overflow: auto;
+  overflow-x: hidden;
+  border: 3px solid transparent;
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
+}
+
+.infoFrame .info .controls {
+  text-align: center;
+}
+
+.infoFrame .info button {
+  font-size: 100%;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  padding: 0 0.8ex;
+  margin: 0 0.5ex;
+  line-height: 1.5em;
+  outline: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.demoFrame {
+  position: relative;
+  box-sizing: border-box;
+  padding: 0.75em 5%;
+  flex: 1 1 75%;
+}
+
+.demoFrame textarea:focus {
+  outline: transparent;
+}
+
+.demoFrame textarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+.demoFrame textarea::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  border: 3px transparent solid;
+  background-clip: content-box;
+}
+.demoFrame textarea::-webkit-resizer {
+  border-bottom-right-radius: 8px;
+}
+
+/* Color rules */
+.info::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.infoFrame .info {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 6px white;
+}
+
+.infoFrame .info button {
+  background-color: transparent;
+  border-color: transparent darkorange;
+}
+
+.infoFrame .info button:focus,
+.infoFrame .info button:hover {
+  border-color: transparent darkcyan;
+}
+.infoFrame .info button:active {
+  border-color: transparent darkslategray;
+}
+
+.demoFrame textarea:focus {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+.demoFrame textarea::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.demoFrame textarea::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.demoFrame textarea::-webkit-resizer {
+  background-image: linear-gradient(
+    to bottom right,
+    transparent 50%,
+    rgb(0 0 0 / 20%),
+    transparent,
+    rgb(0 0 0 / 20%),
+    transparent,
+    rgb(0 0 0 / 20%),
+    transparent,
+    rgb(0 0 0 / 20%)
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .info::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .infoFrame .info {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 0 6px #454553;
+  }
+
+  .infoFrame .info button {
+    background-color: transparent;
+    border-color: transparent darkorange;
+  }
+
+  .infoFrame .info button:focus,
+  .infoFrame .info button:hover {
+    border-color: transparent darkcyan;
+  }
+  .infoFrame .info button:active {
+    border-color: transparent darkslategray;
+  }
+
+  .demoFrame textarea:focus {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  }
+  .demoFrame textarea::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .demoFrame textarea::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  .demoFrame textarea::-webkit-resizer {
+    background-image: linear-gradient(
+      to bottom right,
+      transparent 50%,
+      rgb(0 0 0 / 20%),
+      transparent,
+      rgb(0 0 0 / 20%),
+      transparent,
+      rgb(0 0 0 / 20%),
+      transparent,
+      rgb(0 0 0 / 20%)
+    );
+  }
+}

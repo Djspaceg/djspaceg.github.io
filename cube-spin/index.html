@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Prototype Loading-Cube</title>
+    <link rel="stylesheet" type="text/css" href="../common/demo.css" />
+    <style type="text/css">
+      @keyframes simulateRotate {
+        0% {
+          transform: translate3d(0%, 0, 0);
+          opacity: 0;
+        }
+
+        100% {
+          transform: translate3d(-100%, 0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes actuallyRotate {
+        0% {
+          transform: rotateY(0deg);
+        }
+
+        100% {
+          transform: rotateY(-90deg);
+        }
+
+        /*0%   { transform: rotateX(35deg) rotateY(0deg); }*/
+        /*100% { transform: rotateX(35deg) rotateY(360deg); }*/
+      }
+
+      @keyframes simulateShadow {
+        0% {
+          background-color: rgba(255, 165, 0, 1);
+        }
+
+        100% {
+          background-color: rgba(255, 120, 0, 1);
+        }
+      }
+
+      @keyframes actualShadow {
+        0% {
+          opacity: 0;
+        }
+
+        88% {
+          opacity: 1;
+        }
+
+        88.9% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @keyframes threedShadow {
+        0%,
+        100% {
+          transform: rotateY(45deg) translateY(50%) rotateX(90deg)
+            rotateZ(45deg);
+        }
+
+        50% {
+          transform: rotateY(45deg) translateY(50%) rotateX(70deg)
+            rotateZ(45deg);
+        }
+      }
+
+      /*.enyo-unselectable {
+	cursor: default;
+	-ms-user-select: none;
+	 user-select: none;
+	-moz-user-select: -moz-none;
+	user-select: none;
+}*/
+
+      .infoFrame {
+        flex-basis: auto;
+      }
+
+      #cubeContainer {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        perspective: 135px;
+        perspective-origin: 50% 87.5%;
+        transition: perspective 0.2s;
+      }
+
+      #cubeContainer.flat {
+        perspective: 1000px;
+      }
+
+      .cube {
+        position: relative;
+        background-color: orange;
+        overflow: hidden;
+        height: 52px;
+        width: 52px;
+        animation-fill-mode: both;
+      }
+
+      .cube .face {
+        height: 100%;
+        width: 100%;
+        background-color: darkorange;
+        /* animation: simulateRotate 5s both infinite; */
+      }
+
+      .cube2 {
+        position: relative;
+        height: 52px;
+        width: 52px;
+        /* transform: rotateX(35deg) rotateY(90deg); */
+        transform-style: preserve-3d;
+        transform-origin: 50% 0%;
+        animation: none 2s linear both 4;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .cube2 .face1,
+      .cube2 .face2,
+      .cube2 .face1:after,
+      .cube2 .face2:after {
+        content: '';
+        display: block;
+        position: absolute;
+        height: inherit;
+        width: inherit;
+        /* background-color: orange; */
+        background-color: white;
+      }
+
+      .cube2 .face1:after,
+      .cube2 .face2:after {
+        /* background-color: rgb(213, 100, 0); */
+        background-color: rgb(200, 200, 200);
+        animation: none 2s linear both 4;
+      }
+
+      .cube2 .face1 {
+        transform: translateZ(26px);
+      }
+
+      .cube2 .face2 {
+        transform: rotateY(90deg) translateZ(26px);
+      }
+
+      .cube2 .face2:after {
+        animation-direction: reverse;
+      }
+
+      .cube2.animate {
+        opacity: 1;
+        animation-name: actuallyRotate;
+      }
+
+      .cube2.animate .face1:after,
+      .cube2.animate .face2:after {
+        animation-name: actualShadow;
+      }
+
+      .cube2 {
+        position: relative;
+        height: 52px;
+        width: 52px;
+        /* transform: rotateX(35deg) rotateY(90deg); */
+        transform-style: preserve-3d;
+        transform-origin: 50% 0%;
+        animation: none 2s linear both 4;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .cube2 .face1,
+      .cube2 .face2,
+      .cube2 .face1:after,
+      .cube2 .face2:after {
+        content: '';
+        display: block;
+        position: absolute;
+        height: inherit;
+        width: inherit;
+        /*background-color: orange; */
+        background-color: white;
+      }
+
+      .cube2 .face1:after,
+      .cube2 .face2:after {
+        /*background-color: rgb(213, 100, 0); */
+        background-color: rgb(200, 200, 200);
+        animation: none 2s linear both 4;
+      }
+
+      .cube2 .face1 {
+        transform: translateZ(26px);
+      }
+
+      .cube2 .face2 {
+        transform: rotateY(90deg) translateZ(26px);
+      }
+
+      .cube2 .face2:after {
+        animation-direction: reverse;
+      }
+
+      .cube2.animate {
+        opacity: 1;
+        animation-name: actuallyRotate;
+      }
+
+      .cube2.animate .face1:after,
+      .cube2.animate .face2:after {
+        animation-name: actualShadow;
+      }
+
+      .cube3 {
+        position: relative;
+        height: 52px;
+        width: 52px;
+        transform-style: preserve-3d;
+        transform-origin: 50% 0%;
+        animation: none 2s linear 4;
+      }
+
+      .cube3:before,
+      .cube3:after {
+        content: '';
+        display: block;
+        position: absolute;
+        height: inherit;
+        width: inherit;
+        /*background-color: rgb(210, 210, 210); */
+        background-color: rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        animation: none 2s linear 4;
+      }
+
+      .cube3:before {
+        transform: translateZ(26px);
+      }
+
+      .cube3:after {
+        transform: translateX(50%) rotateY(90deg);
+        animation-direction: reverse;
+      }
+
+      .cube3.animate {
+        animation-name: actuallyRotate;
+      }
+
+      .cube3.animate:before,
+      .cube3.animate:after {
+        animation-name: actualShadow;
+      }
+
+      .cube3.animate .shadow {
+        animation-name: threedShadow;
+      }
+
+      .cube3.testing {
+        transform: rotateX(-35deg) rotateY(-30deg);
+      }
+
+      .cube3.testing:before,
+      .cube3.testing:after {
+        opacity: 1;
+      }
+
+      .cube3.testing:before {
+        opacity: 0.6;
+      }
+
+      .shadow {
+        /*background-color: beige; */
+        /*height: inherit; */
+        /*width: inherit; */
+        /*position: absolute; */
+        /*transform: rotateX(90deg) translateZ(-26px) rotateX(-20deg) rotateY(20deg); */
+        /*transform: translateY(50%) rotateX(90deg); */
+        animation: none 2s linear 4;
+
+        /*background-color: beige; */
+        height: 0;
+        width: 0;
+        position: absolute;
+        /* transform: rotateX(90deg) translateZ(-26px) rotateX(-20deg) rotateY(20deg); */
+        /* transform: rotateY(45deg) translateY(50%) translateZ(0px) rotateX(60deg) rotateZ(45deg); */
+        border-bottom: rgba(0, 0, 0, 0.05) solid 52px;
+        border-left: transparent solid 52px;
+      }
+    </style>
+    <script type="text/javascript" src="../common/util-classes.js"></script>
+    <script type="text/javascript" src="../common/util-events.js"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+
+      function toggleAnimating() {
+        // var cube = getElem('cube');
+        // var cube2 = getElem('cube2');
+        var cube3 = getElem('cube3');
+        // cube.toggleClass('animate');
+        // cube2.toggleClass('animate');
+        cube3.toggleClass('animate');
+      }
+
+      function toggleFlat(ev) {
+        var demo = getElem('cubeContainer');
+        demo.toggleClass('flat');
+        ev.target.innerHTML =
+          'Switch to ' + (demo.hasClass('flat') ? '3D' : 'Flat');
+      }
+
+      onDomReady(function (ev) {
+        addEventTo('buttonStart', 'click', toggleAnimating);
+        addEventTo('buttonToggleFlat', 'click', toggleFlat);
+
+        // Turn off when done
+        onAnimationEnd('cube3', toggleAnimating);
+      });
+
+      // var ev = {elementLock: null};
+      // document.addEventListener('mouseup', function (event) {
+      // 	console.log("mouselock released:", ev.elementLock);
+      // 	ev.elementLock = null;
+      // });
+      // document.addEventListener('mousemove', function (event) {
+      // 	// console.log(event);
+      // 	if (event.which == 1) {
+      // 		var elem;
+      // 		if (!ev.elementLock && event.toElement !== document.documentElement) {
+      // 			elem = event.toElement;
+      // 			ev.elementLock = elem;
+      // 			console.log('locking to', elem);
+      // 		} else {
+      // 			elem = ev.elementLock;
+      // 		}
+      // 		// var elem = getElem('cube3shadow');
+      // 		if (!elem) {
+      // 			elem = getElem('cube3');
+      // 		}
+      // 		switch (elem.id) {
+      // 			case 'cube3shadow':
+      // 				elem.applyStyle({'transform': 'translateY(50%) rotateZ(45deg) rotateX('+ ((event.y / 5) - 45) + 'deg) rotateY('+ ((event.x / 5) - 150) + 'deg)'});
+      // 				break;
+      // 			default:
+      // 				// console.log(ev.elementLock,event);
+      // 				elem.applyStyle({'transform': 'rotateX(-35deg) rotateX('+ ((event.y / 5) - 45) + 'deg) rotateY('+ ((event.x / 5) - 150) + 'deg)'});
+      // 		}
+      // 	}
+      // });
+
+      //]]>
+    </script>
+  </head>
+
+  <body class="enyo-unselectable">
+    <div id="info" class="infoFrame">
+      <div class="info">
+        <h1>Prototype Loading-Cube</h1>
+        <div style="text-align: center">
+          <button id="buttonStart">Start Loading</button>
+          <button id="buttonToggleFlat">Switch to Flat</button>
+        </div>
+        <p>
+          This demonstrates a prototype loading animation that uses one DOM
+          node, and simulates a cube that folds itself into existence as it
+          rotates and gracefully disappears. It supports a flat and 3D mode.
+        </p>
+      </div>
+    </div>
+    <div class="demoFrame">
+      <div id="cubeContainer">
+        <!--
+				<div id="cube" class="cube">
+					<div class="face"></div>
+				</div>
+				<br>
+				<div id="cube2" class="cube2">
+					<div class="face1"></div>
+					<div class="face2"></div>
+				</div>
+				-->
+        <br />
+        <div id="cube3" class="cube3">
+          <!--
+					Add a 3D perspective shadow.
+					<div id="cube3shadow" class="shadow"></div>
+					-->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
